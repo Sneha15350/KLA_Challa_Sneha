@@ -1,3 +1,4 @@
+#this code is working fine for logging to a text file except the updation of csv
 import yaml
 from yaml.loader import SafeLoader
 import datetime
@@ -30,6 +31,12 @@ def printingTasksDataLoad(mainflow,subflow,task,function_name,input1):
     global ct
     log.write(str(datetime.datetime.now())+';'+mainflow+'.'+subflow+'.'+task+' Entry'+'\n')
     log.write(str(datetime.datetime.now())+';'+mainflow+'.'+subflow+'.'+task+' Executing '+function_name+' ('+input1+')'+'\n')
+    with open(function_name) as csv_file: 
+        csv_reader = csv.reader(csv_file, delimiter=',') 
+        next(csv_reader)
+        for row in csv_reader: 
+            ls.append(row)
+    dicts = {Outputs : [ , NoOfDefects ]}
     log.write(str(datetime.datetime.now())+';'+mainflow+'.'+subflow+'.'+task+' Exit'+'\n')
 
 def printingFlows(dct1,mainwflow,tasks,tasks2):
@@ -129,7 +136,7 @@ for mainwflow in data.keys():
                                     t3 = threading.Thread(target=printingTasksDataLoad, args=(mainwflow,tasks,tasks2,dct1['Activities'][tasks2]['Function'],dct1['Activities'][tasks2]['Inputs']['Filename'],))
                                     t3.start() 
 
-                            elif(dct1['Activities'][tasks2]['Type']=='Flow'):
+                                elif(dct1['Activities'][tasks2]['Type']=='Flow'):
                                     t2 = threading.Thread(target = printingFlows, args=(dct1['Activities'][tasks2],mainwflow,tasks,tasks2))
                                     t2.start()
                     time.sleep(s)
